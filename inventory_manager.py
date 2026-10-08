@@ -82,9 +82,48 @@ def load_inventory():
         print(f"\nError reading file: {e}. Using default inventory.")
         return inventory
 
+def save_inventory(inventory_list):
+    print("\nSaving inventory...")
+    try:
+        with open("inventory.json", "w") as file:
+            json.dump(inventory_list, file, indent=4)
+        print("Inventory saved successfully to inventory.json.")
+    except Exception as e:
+        print(f"Error saving inventory: {e}")
+
 
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")
 print("=========================================")
 
 current_inventory = load_inventory()
+
+
+while True:
+    print("\n--------- MENU ---------")
+    print("1. Display All Products")
+    print("2. Add Product")
+    print("3. Update Stock")
+    print("4. Search Product")
+    print("5. Save Inventory")
+    print("6. Exit")
+    print("------------------------")
+
+    option = input("\nEnter option: ")
+
+    if option == "1":
+        display_all(current_inventory)
+    elif option == "2":
+        add_product(current_inventory)
+    elif option == "3":
+        update_stock(current_inventory)
+    elif option == "4":
+        search_product(current_inventory)
+    elif option == "5":
+        save_inventory(current_inventory)
+    elif option == "6":
+        save_inventory(current_inventory)
+        print("Exiting program.")
+        break
+    else:
+        print("Invalid option. Please choose between 1 and 6.")

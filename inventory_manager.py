@@ -66,3 +66,25 @@ def search_product(inventory_list):
             print("-----------------------------------------")
             return
     print("Product not found.")
+
+def load_inventory():
+    filename = "inventory.json"
+    try:
+        with open(filename, "r") as file:
+            data = json.load(file)
+            print("\ninventory.json found.")
+            print("Inventory loaded successfully.")
+            return data
+    except FileNotFoundError:
+        print("\ninventory.json not found. Using default inventory.")
+        return inventory
+    except Exception as e:
+        print(f"\nError reading file: {e}. Using default inventory.")
+        return inventory
+
+
+print("=========================================")
+print("INVENTORY MANAGEMENT SYSTEM")
+print("=========================================")
+
+current_inventory = load_inventory()

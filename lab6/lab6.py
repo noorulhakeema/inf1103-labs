@@ -93,3 +93,50 @@ def save_inventory(inventory):
         print("Inventory saved successfully to inventory.json.")
     except Exception as e:
         print(f"Error saving inventory: {e}")
+
+## functions to add, update, and search
+def add_product_menu(inventory):
+    print("\nAdd New Product")
+    p_id = input("Product ID: ")
+    name = input("Product Name: ")
+    try:
+        price = float(input("Price: "))
+        stock = int(input("Stock Quantity: "))
+    except ValueError:
+        print("Invalid price or stock amount.")
+        return
+ 
+    product = Product(p_id, name, price, stock)
+    inventory.add_product(product)
+    print("Product added successfully!")
+ 
+ 
+def update_stock_menu(inventory):
+    print("\nUpdate Stock")
+    p_id = input("Enter Product ID: ")
+    product = inventory.search_product(p_id)
+    if product is None:
+        print("Product not found.")
+        return
+ 
+    print("\nProduct Found:")
+    print(f"Name: {product.get_name()}")
+    print(f"Current Stock: {product.get_stock()}\n")
+    try:
+        new_stock = int(input("New Stock Quantity: "))
+        product.update_stock(new_stock)
+        print("\nStock updated successfully!")
+    except ValueError:
+        print("Invalid stock number.")
+ 
+ 
+def search_product_menu(inventory):
+    print("\nSearch Product")
+    p_id = input("Enter Product ID: ")
+    product = inventory.search_product(p_id)
+    if product is None:
+        print("Product not found.")
+    else:
+        print("\nProduct Found")
+        product.display_information()
+

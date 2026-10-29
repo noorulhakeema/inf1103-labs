@@ -140,3 +140,49 @@ def search_product_menu(inventory):
         print("\nProduct Found")
         product.display_information()
 
+
+print("=========================================")
+print("INVENTORY MANAGEMENT SYSTEM")
+print("=========================================")
+ 
+# create the inventory object and fill it with product details
+inventory = Inventory()
+data = load_inventory_data()
+
+if data is None:
+    inventory.add_product(Product("P001", "Laptop", 1200.00, 15))
+    inventory.add_product(Product("P002", "Mouse", 25.50, 40))
+    inventory.add_product(Product("P003", "Keyboard", 45.00, 25))
+else:
+    for item in data:
+        inventory.add_product(Product(item["id"], item["name"], item["price"], item["stock"]))
+ 
+while True:
+    print("\n--------- MENU ---------")
+    print("1. Display All Products")
+    print("2. Add Product")
+    print("3. Update Stock")
+    print("4. Search Product")
+    print("5. Save Inventory")
+    print("6. Exit")
+    print("------------------------")
+ 
+    option = input("\nEnter option: ")
+ 
+    if option == "1":
+        inventory.display_all()
+    elif option == "2":
+        add_product_menu(inventory)
+    elif option == "3":
+        update_stock_menu(inventory)
+    elif option == "4":
+        search_product_menu(inventory)
+    elif option == "5":
+        save_inventory(inventory)
+    elif option == "6":
+        save_inventory(inventory)
+        print("Exiting program.")
+        break
+    else:
+        print("Invalid option. Please choose between 1 and 6.")
+

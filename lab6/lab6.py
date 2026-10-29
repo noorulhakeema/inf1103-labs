@@ -1,3 +1,5 @@
+import json
+
 ## create product class
 class Product:
  
@@ -57,3 +59,37 @@ class Inventory:
  
     def get_products(self):
         return self.__products
+
+
+##file handling by loading and saving
+def load_inventory_data():
+    try:
+        with open("inventory.json", "r") as file:
+            data = json.load(file)
+        print("\ninventory.json found.")
+        print("Inventory loaded successfully.")
+        return data
+    except FileNotFoundError:
+        print("\ninventory.json not found. Using default inventory.")
+        return None
+    except Exception as e:
+        print(f"\nError reading file: {e}. Using default inventory.")
+        return None
+ 
+ 
+def save_inventory(inventory):
+    print("\nSaving inventory...")
+    try:
+        data = []
+        for product in inventory.get_products():
+            data.append({
+                "id": product.get_product_id(),
+                "name": product.get_name(),
+                "price": product.get_price(),
+                "stock": product.get_stock()
+            })
+        with open("inventory.json", "w") as file:
+            json.dump(data, file, indent=4)
+        print("Inventory saved successfully to inventory.json.")
+    except Exception as e:
+        print(f"Error saving inventory: {e}")

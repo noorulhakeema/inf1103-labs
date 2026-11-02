@@ -48,6 +48,22 @@ class PhysicalProduct(Product):
         print(f"Weight: {self.__weight} kg")
         print("-----------------------------------------")
 
+#create Digitalproduct that inherits from Product
+class DigitalProduct(Product):
+
+    def __init__(self, product_id, name, price, stock, download_size):
+        super().__init__(product_id, name, price, stock)
+        self.__download_size = download_size
+
+    def display_information(self):
+        print("-----------------------------------------")
+        print(f"ID: {self.get_product_id()}")
+        print(f"Name: {self.get_name()}")
+        print(f"Price: ${self.get_price():.2f}")
+        print(f"Stock: {self.get_stock()}")
+        print(f"Download size: {self.__download_size} MB")
+        print("-----------------------------------------")
+
 ## inventory class 
 class Inventory:
  

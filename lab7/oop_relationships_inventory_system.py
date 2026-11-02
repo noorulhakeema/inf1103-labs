@@ -36,8 +36,14 @@ class Product(ABC):
     def get_fulfilment_info(self):
         pass
 
+class CanBeShipped(ABC):
+
+    @abstractmethod
+    def calculate_shipping_cost(self):
+        pass
+
 #create PhysicalProduct that inherits from Product
-class PhysicalProduct(Product):
+class PhysicalProduct(Product, CanBeShipped):
 
     def __init__(self, product_id, name, price, stock, weight):
         super().__init__(product_id, name, price, stock)
@@ -50,7 +56,10 @@ class PhysicalProduct(Product):
 
     def get_fulfilment_info(self):
         return "This product requires physical shipping."
-    
+
+    def calculate_shipping_cost(self):
+        return 5.00 * self.__weight
+        
 #create Digitalproduct that inherits from Product
 class DigitalProduct(Product):
 
@@ -174,8 +183,6 @@ def search_product_menu(inventory):
         print("\nProduct Found")
         product.display_information()
 
-# TEMP TEST
-x = Product("T3", "Test", 1.00, 1)
 
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")

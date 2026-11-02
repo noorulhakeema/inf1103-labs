@@ -1,7 +1,8 @@
 import json
+from abc import ABC, abstractmethod
 
 ## create product class
-class Product:
+class Product(ABC):
  
     def __init__(self, product_id, name, price, stock):
         self.__product_id = product_id
@@ -31,6 +32,10 @@ class Product:
         print(f"Price: ${self.__price:.2f}")
         print(f"Stock: {self.__stock}")
 
+    @abstractmethod
+    def get_fulfilment_info(self):
+        pass
+
 #create PhysicalProduct that inherits from Product
 class PhysicalProduct(Product):
 
@@ -43,6 +48,9 @@ class PhysicalProduct(Product):
         print(f"Weight: {self.__weight} kg")
         print("-----------------------------------------")
 
+    def get_fulfilment_info(self):
+        return "This product requires physical shipping."
+    
 #create Digitalproduct that inherits from Product
 class DigitalProduct(Product):
 
@@ -55,6 +63,9 @@ class DigitalProduct(Product):
         print(f"Download size: {self.__download_size} MB")
         print("-----------------------------------------")
 
+    def get_fulfilment_info(self):
+        return "This product is delivered digitally."
+    
 ## inventory class 
 class Inventory:
  
@@ -163,6 +174,8 @@ def search_product_menu(inventory):
         print("\nProduct Found")
         product.display_information()
 
+# TEMP TEST
+x = Product("T3", "Test", 1.00, 1)
 
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")
@@ -173,9 +186,9 @@ inventory = Inventory()
 data = load_inventory_data()
 
 if data is None:
-    inventory.add_product(Product("P001", "Laptop", 1200.00, 15))
-    inventory.add_product(Product("P002", "Mouse", 25.50, 40))
-    inventory.add_product(Product("P003", "Keyboard", 45.00, 25))
+    inventory.add_product(PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.2))
+    inventory.add_product(PhysicalProduct("P002", "Mouse", 25.50, 40, 0.1))
+    inventory.add_product(PhysicalProduct("P003", "Keyboard", 45.00, 25, 0.8))
 else:
     for item in data:
         inventory.add_product(Product(item["id"], item["name"], item["price"], item["stock"]))

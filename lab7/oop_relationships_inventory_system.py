@@ -59,7 +59,10 @@ class PhysicalProduct(Product, CanBeShipped):
 
     def calculate_shipping_cost(self):
         return 5.00 * self.__weight
-        
+
+    def get_weight(self):
+        return self.__weight
+            
 #create Digitalproduct that inherits from Product
 class DigitalProduct(Product):
 
@@ -74,7 +77,10 @@ class DigitalProduct(Product):
 
     def get_fulfilment_info(self):
         return "This product is delivered digitally."
-    
+
+    def get_download_size(self):
+        return self.__download_size
+        
 ## inventory class 
 class Inventory:
  
@@ -125,12 +131,19 @@ def save_inventory(inventory):
     try:
         data = []
         for product in inventory.get_products():
-            data.append({
+            item = {
                 "id": product.get_product_id(),
                 "name": product.get_name(),
                 "price": product.get_price(),
                 "stock": product.get_stock()
-            })
+            }
+            if isinstance(product, PhysicalProduct):
+                item["type"] = "physical"
+                item["weight"] = product.get_weight()
+            elif isinstance(product, DigitalProduct):
+                item["type"] = "digital"
+                item["download_size"] = product.get_download_size()
+            data.append(item)
         with open("inventory.json", "w") as file:
             json.dump(data, file, indent=4)
         print("Inventory saved successfully to inventory.json.")
@@ -209,8 +222,11 @@ if data is None:
     inventory.add_product(PhysicalProduct("P003", "Keyboard", 45.00, 25, 0.8))
 else:
     for item in data:
-        inventory.add_product(Product(item["id"], item["name"], item["price"], item["stock"]))
- 
+        if item["type"] == "physical":
+            inventory.add_product(PhysicalProduct(item["id"], item["name"], item["price"], item["stock"], item["weight"]))
+        elif item["type"] == "digital":
+            inventory.add_product(DigitalProduct(item["id"], item["name"], item["price"], item["stock"], item["download_size"]))
+            
 while True:
     print("\n--------- MENU ---------")
     print("1. Display All Products")

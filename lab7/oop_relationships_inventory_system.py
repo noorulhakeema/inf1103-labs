@@ -32,6 +32,22 @@ class Product:
         print(f"Stock: {self.__stock}")
         print("-----------------------------------------")
 
+#create PhysicalProduct that inherits from Product
+class PhysicalProduct(Product):
+
+    def __init__(self, product_id, name, price, stock, weight):
+        super().__init__(product_id, name, price, stock)
+        self.__weight = weight
+
+    def display_information(self):
+        print("-----------------------------------------")
+        print(f"ID: {self.get_product_id()}")
+        print(f"Name: {self.get_name()}")
+        print(f"Price: ${self.get_price():.2f}")
+        print(f"Stock: {self.get_stock()}")
+        print(f"Weight: {self.__weight} kg")
+        print("-----------------------------------------")
+
 ## inventory class 
 class Inventory:
  

@@ -140,19 +140,30 @@ def save_inventory(inventory):
 ## functions to add, update, and search
 def add_product_menu(inventory):
     print("\nAdd New Product")
+    print("1. Physical product")
+    print("2. Digital product")
+    choice = input("Choose product type: ")
+    if choice not in ("1", "2"):
+        print("Invalid product type.")
+        return
+
     p_id = input("Product ID: ")
     name = input("Product Name: ")
     try:
         price = float(input("Price: "))
         stock = int(input("Stock Quantity: "))
+        if choice == "1":
+            weight = float(input("Weight (kg): "))
+            product = PhysicalProduct(p_id, name, price, stock, weight)
+        else:
+            size = float(input("Download size (MB): "))
+            product = DigitalProduct(p_id, name, price, stock, size)
     except ValueError:
-        print("Invalid price or stock amount.")
+        print("Invalid number entered.")
         return
- 
-    product = Product(p_id, name, price, stock)
+
     inventory.add_product(product)
     print("Product added successfully!")
- 
  
 def update_stock_menu(inventory):
     print("\nUpdate Stock")

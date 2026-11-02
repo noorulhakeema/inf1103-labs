@@ -30,7 +30,6 @@ class Product:
         print(f"Name: {self.__name}")
         print(f"Price: ${self.__price:.2f}")
         print(f"Stock: {self.__stock}")
-        print("-----------------------------------------")
 
 #create PhysicalProduct that inherits from Product
 class PhysicalProduct(Product):
@@ -40,11 +39,7 @@ class PhysicalProduct(Product):
         self.__weight = weight
 
     def display_information(self):
-        print("-----------------------------------------")
-        print(f"ID: {self.get_product_id()}")
-        print(f"Name: {self.get_name()}")
-        print(f"Price: ${self.get_price():.2f}")
-        print(f"Stock: {self.get_stock()}")
+        super().display_information()
         print(f"Weight: {self.__weight} kg")
         print("-----------------------------------------")
 
@@ -56,11 +51,7 @@ class DigitalProduct(Product):
         self.__download_size = download_size
 
     def display_information(self):
-        print("-----------------------------------------")
-        print(f"ID: {self.get_product_id()}")
-        print(f"Name: {self.get_name()}")
-        print(f"Price: ${self.get_price():.2f}")
-        print(f"Stock: {self.get_stock()}")
+        super().display_information()
         print(f"Download size: {self.__download_size} MB")
         print("-----------------------------------------")
 

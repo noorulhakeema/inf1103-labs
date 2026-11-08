@@ -14,7 +14,7 @@
         "id": "P002",
         "name": "Mouse",
         "price": 25.5,
-        "stock": 40,
+        "stock": 25,
         "supplier_id": "S001",
         "supplier_name": "TechSource Ltd",
         "supplier_email": "sales@techsource.com",
@@ -31,5 +31,27 @@
         "supplier_email": "sales@techsource.com",
         "type": "physical",
         "weight": 0.8
+    },
+    {
+        "id": "P004",
+        "name": "cable",
+        "price": 30.0,
+        "stock": 2,
+        "supplier_id": "S002",
+        "supplier_name": "noorul",
+        "supplier_email": "noorul@hotmail.com",
+        "type": "physical",
+        "weight": 0.2
+    },
+    {
+        "id": "P005",
+        "name": "game",
+        "price": 23.0,
+        "stock": 2,
+        "supplier_id": "S002",
+        "supplier_name": "noorul",
+        "supplier_email": "noorul@hotmail.com",
+        "type": "digital",
+        "download_size": 8900.0
     }
 ]

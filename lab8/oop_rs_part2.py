@@ -365,7 +365,15 @@ for product_id in ("P001", "D001"):
     found = lsp_inventory.find_product(product_id)
     found.update_stock(7)
     print(f"{found.get_name()} stock after update_stock(7): {found.get_stock()}")
-    
+
+print("\n===== 7. POLYMORPHISM =====")
+poly_inventory = Inventory()
+poly_inventory.add_product(laptop)
+poly_inventory.add_product(ebook)
+
+for product in poly_inventory.get_products():
+    product.display_information()
+    print(product.get_fulfilment_info())    
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")
 print("=========================================")

@@ -144,6 +144,48 @@ class Inventory:
     def get_products(self) -> list[Product]:
         return self.__products
 
+## OrderLine represents one product and the quantity of that product requested in an order
+class OrderLine:
+
+    def __init__(self, product: Product, quantity: int):
+        self.__product: Product = product
+        self.__quantity: int = quantity
+
+    def get_product(self) -> Product:
+        return self.__product
+
+    def calculate_subtotal(self) -> float:
+        return self.__product.get_price() * self.__quantity
+
+    def display_information(self) -> None:
+        print(f"{self.__product.get_name()} x {self.__quantity} = ${self.calculate_subtotal():.2f}")
+
+## Order creates and manages its own OrderLine objects
+class Order:
+
+    def __init__(self, order_id: str):
+        self.__order_id: str = order_id
+        self.__order_lines: list[OrderLine] = []
+
+    def add_order_line(self, product: Product, quantity: int) -> None:
+        order_line = OrderLine(product, quantity)
+        self.__order_lines.append(order_line)
+
+    def remove_order_line(self, product_id: str) -> None:
+        for line in self.__order_lines:
+            if line.get_product().get_product_id() == product_id:
+                self.__order_lines.remove(line)
+                return
+
+    def get_order_lines(self) -> list[OrderLine]:
+        return self.__order_lines
+
+    def calculate_total(self) -> float:
+        total: float = 0.0
+        for line in self.__order_lines:
+            total += line.calculate_subtotal()
+        return total
+    
 ##file handling by loading and saving
 def load_inventory_data():
     try:
@@ -251,6 +293,58 @@ def search_product_menu(inventory):
         product.display_information()
         product.get_supplier().display_information()
 
+##testing
+print("\n===== 2. ASSOCIATION =====")
+supplier = Supplier("S001", "TechSource Ltd", "sales@techsource.com")
+laptop = PhysicalProduct("P001", "Laptop", 1200.00, 15, supplier, 2.2)
+ebook = DigitalProduct("D001", "Python eBook", 19.99, 100, supplier, 12.5)
+
+print("\nSupplier information through the laptop:")
+laptop.get_supplier().display_information()
+print("\nSupplier information through the eBook:")
+ebook.get_supplier().display_information()
+
+del supplier
+print("\nAfter del supplier, laptop still shows its supplier:")
+laptop.get_supplier().display_information()
+
+print("\n===== 3. AGGREGATION =====")
+inventory_a = Inventory()
+inventory_b = Inventory()
+
+inventory_a.add_product(laptop)
+print("Laptop in Inventory A:", inventory_a.find_product("P001") is laptop)
+
+inventory_a.remove_product("P001")
+print("Laptop in Inventory A after remove:", inventory_a.find_product("P001"))
+print("Laptop still usable:", laptop.get_name(), "- stock", laptop.get_stock())
+
+inventory_b.add_product(laptop)
+print("Same laptop object in Inventory B:", inventory_b.find_product("P001") is laptop)
+
+print("\n===== 4. COMPOSITION =====")
+order1 = Order("O001")
+order1.add_order_line(laptop, 2)
+order1.add_order_line(ebook, 3)
+
+print("\nOrder O001 lines:")
+for line in order1.get_order_lines():
+    line.display_information()
+print(f"Order O001 total: ${order1.calculate_total():.2f}")
+
+order2 = Order("O002")
+order2.add_order_line(laptop, 1)
+
+line1 = order1.get_order_lines()[0]
+line2 = order2.get_order_lines()[0]
+print("\nSame Product in both orders:", line1.get_product() is line2.get_product())
+print("Same OrderLine in both orders:", line1 is line2)
+
+order1.remove_order_line("P001")
+print("\nOrder O001 lines after removing the laptop line:")
+for line in order1.get_order_lines():
+    line.display_information()
+print("Laptop still exists:", laptop.get_name())
 
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")

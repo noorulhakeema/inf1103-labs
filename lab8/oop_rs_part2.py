@@ -1,14 +1,38 @@
 import json
 from abc import ABC, abstractmethod
 
+# created supplier class
+class Supplier:
+
+    def __init__(self, supplier_id: str, name: str, contact_email: str):
+        self.__supplier_id: str = supplier_id
+        self.__name: str = name
+        self.__contact_email: str = contact_email
+
+    def get_supplier_id(self) -> str:
+        return self.__supplier_id
+
+    def get_name(self) -> str:
+        return self.__name
+
+    def get_contact_email(self) -> str:
+        return self.__contact_email
+
+    def display_information(self) -> None:
+        print(f"Supplier ID: {self.__supplier_id}")
+        print(f"Name: {self.__name}")
+        print(f"Contact Email: {self.__contact_email}")
+
 ## create product class
 class Product(ABC):
  
-    def __init__(self, product_id, name, price, stock):
-        self.__product_id = product_id
-        self.__name = name
-        self.__price = price
-        self.__stock = stock
+    def __init__(self, product_id: str, name: str, price: float,
+                 stock: int, supplier: Supplier):
+        self.__product_id: str = product_id
+        self.__name: str = name
+        self.__price: float = price
+        self.__stock: int = stock
+        self.__supplier: Supplier = supplier
  
     def get_product_id(self):
         return self.__product_id
@@ -21,7 +45,10 @@ class Product(ABC):
  
     def get_stock(self):
         return self.__stock
- 
+
+    def get_supplier(self) -> Supplier:
+        return self.__supplier
+    
     def update_stock(self, quantity):
         self.__stock = quantity
  
@@ -45,9 +72,10 @@ class CanBeShipped(ABC):
 #create PhysicalProduct that inherits from Product
 class PhysicalProduct(Product, CanBeShipped):
 
-    def __init__(self, product_id, name, price, stock, weight):
-        super().__init__(product_id, name, price, stock)
-        self.__weight = weight
+    def __init__(self, product_id: str, name: str, price: float,
+                 stock: int, supplier: Supplier, weight: float):
+        super().__init__(product_id, name, price, stock, supplier)
+        self.__weight: float = weight
 
     def display_information(self):
         super().display_information()
@@ -66,9 +94,10 @@ class PhysicalProduct(Product, CanBeShipped):
 #create Digitalproduct that inherits from Product
 class DigitalProduct(Product):
 
-    def __init__(self, product_id, name, price, stock, download_size):
-        super().__init__(product_id, name, price, stock)
-        self.__download_size = download_size
+    def __init__(self, product_id: str, name: str, price: float,
+                 stock: int, supplier: Supplier, download_size: float):
+        super().__init__(product_id, name, price, stock, supplier)
+        self.__download_size: float = download_size
 
     def display_information(self):
         super().display_information()
@@ -131,11 +160,15 @@ def save_inventory(inventory):
     try:
         data = []
         for product in inventory.get_products():
+            supplier = product.get_supplier()
             item = {
                 "id": product.get_product_id(),
                 "name": product.get_name(),
                 "price": product.get_price(),
-                "stock": product.get_stock()
+                "stock": product.get_stock(),
+                "supplier_id": supplier.get_supplier_id(),
+                "supplier_name": supplier.get_name(),
+                "supplier_email": supplier.get_contact_email()
             }
             if isinstance(product, PhysicalProduct):
                 item["type"] = "physical"
@@ -162,15 +195,20 @@ def add_product_menu(inventory):
 
     p_id = input("Product ID: ")
     name = input("Product Name: ")
+    s_id = input("Supplier ID: ")
+    s_name = input("Supplier Name: ")
+    s_email = input("Supplier Email: ")
+    supplier = Supplier(s_id, s_name, s_email)
+    
     try:
         price = float(input("Price: "))
         stock = int(input("Stock Quantity: "))
         if choice == "1":
             weight = float(input("Weight (kg): "))
-            product = PhysicalProduct(p_id, name, price, stock, weight)
+            product = PhysicalProduct(p_id, name, price, stock, supplier, weight)
         else:
             size = float(input("Download size (MB): "))
-            product = DigitalProduct(p_id, name, price, stock, size)
+            product = DigitalProduct(p_id, name, price, stock, supplier, size)
     except ValueError:
         print("Invalid number entered.")
         return
@@ -206,7 +244,7 @@ def search_product_menu(inventory):
     else:
         print("\nProduct Found")
         product.display_information()
-
+        product.get_supplier().display_information()
 
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")
@@ -217,16 +255,18 @@ inventory = Inventory()
 data = load_inventory_data()
 
 if data is None:
-    inventory.add_product(PhysicalProduct("P001", "Laptop", 1200.00, 15, 2.2))
-    inventory.add_product(PhysicalProduct("P002", "Mouse", 25.50, 40, 0.1))
-    inventory.add_product(PhysicalProduct("P003", "Keyboard", 45.00, 25, 0.8))
+    default_supplier = Supplier("S001", "TechSource Ltd", "sales@techsource.com")
+    inventory.add_product(PhysicalProduct("P001", "Laptop", 1200.00, 15, default_supplier, 2.2))
+    inventory.add_product(PhysicalProduct("P002", "Mouse", 25.50, 40, default_supplier, 0.1))
+    inventory.add_product(PhysicalProduct("P003", "Keyboard", 45.00, 25, default_supplier, 0.8))
 else:
     for item in data:
+        supplier = Supplier(item["supplier_id"], item["supplier_name"], item["supplier_email"])
         if item["type"] == "physical":
-            inventory.add_product(PhysicalProduct(item["id"], item["name"], item["price"], item["stock"], item["weight"]))
+            inventory.add_product(PhysicalProduct(item["id"], item["name"], item["price"], item["stock"], supplier, item["weight"]))
         elif item["type"] == "digital":
-            inventory.add_product(DigitalProduct(item["id"], item["name"], item["price"], item["stock"], item["download_size"]))
-            
+            inventory.add_product(DigitalProduct(item["id"], item["name"], item["price"], item["stock"], supplier, item["download_size"]))            
+
 while True:
     print("\n--------- MENU ---------")
     print("1. Display All Products")

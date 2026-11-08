@@ -111,21 +111,27 @@ class DigitalProduct(Product):
         return self.__download_size
         
 ## inventory class 
+# Inventory groups Product objects, but the products can exist independently of the inventory
 class Inventory:
- 
+
     def __init__(self):
-        self.__products = []
- 
-    def add_product(self, product):
+        self.__products: list[Product] = []
+
+    def add_product(self, product: Product) -> None:
         self.__products.append(product)
- 
-    def search_product(self, product_id):
+
+    def remove_product(self, product_id: str) -> None:
+        product = self.find_product(product_id)
+        if product is not None:
+            self.__products.remove(product)
+
+    def find_product(self, product_id: str) -> Product | None:
         for product in self.__products:
             if product.get_product_id() == product_id:
                 return product
         return None
- 
-    def display_all(self):
+
+    def display_all(self) -> None:
         print("\nCurrent Inventory")
         print("-----------------------------------------")
         if not self.__products:
@@ -134,10 +140,9 @@ class Inventory:
             print(f"ID: {product.get_product_id()} | Name: {product.get_name()} | "
                   f"Price: ${product.get_price():.2f} | Stock: {product.get_stock()}")
         print("-----------------------------------------")
- 
-    def get_products(self):
-        return self.__products
 
+    def get_products(self) -> list[Product]:
+        return self.__products
 
 ##file handling by loading and saving
 def load_inventory_data():
@@ -219,7 +224,7 @@ def add_product_menu(inventory):
 def update_stock_menu(inventory):
     print("\nUpdate Stock")
     p_id = input("Enter Product ID: ")
-    product = inventory.search_product(p_id)
+    product = inventory.find_product(p_id)
     if product is None:
         print("Product not found.")
         return
@@ -238,13 +243,14 @@ def update_stock_menu(inventory):
 def search_product_menu(inventory):
     print("\nSearch Product")
     p_id = input("Enter Product ID: ")
-    product = inventory.search_product(p_id)
+    product = inventory.find_product(p_id)
     if product is None:
         print("Product not found.")
     else:
         print("\nProduct Found")
         product.display_information()
         product.get_supplier().display_information()
+
 
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")

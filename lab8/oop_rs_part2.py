@@ -292,6 +292,10 @@ def search_product_menu(inventory: Inventory) -> None:
         product.display_information()
         product.get_supplier().display_information()
 
+def show_product_details(product: Product) -> None:
+    product.display_information()
+    print(product.get_fulfilment_info())
+
 ##testing
 print("\n===== 2. ASSOCIATION =====")
 supplier = Supplier("S001", "TechSource Ltd", "sales@techsource.com")
@@ -345,6 +349,23 @@ for line in order1.get_order_lines():
     line.display_information()
 print("Laptop still exists:", laptop.get_name())
 
+print("\n===== 6. LSP =====")
+print("\nshow_product_details with a PhysicalProduct:")
+show_product_details(laptop)
+print("\nshow_product_details with a DigitalProduct:")
+show_product_details(ebook)
+
+print("\nBoth types added to one Inventory and used normally:")
+lsp_inventory = Inventory()
+lsp_inventory.add_product(laptop)
+lsp_inventory.add_product(ebook)
+lsp_inventory.display_all()
+
+for product_id in ("P001", "D001"):
+    found = lsp_inventory.find_product(product_id)
+    found.update_stock(7)
+    print(f"{found.get_name()} stock after update_stock(7): {found.get_stock()}")
+    
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")
 print("=========================================")

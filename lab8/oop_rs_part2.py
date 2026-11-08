@@ -25,7 +25,7 @@ class Supplier:
 
 ## create product class
 class Product(ABC):
- 
+
     def __init__(self, product_id: str, name: str, price: float,
                  stock: int, supplier: Supplier):
         self.__product_id: str = product_id
@@ -33,26 +33,26 @@ class Product(ABC):
         self.__price: float = price
         self.__stock: int = stock
         self.__supplier: Supplier = supplier
- 
-    def get_product_id(self):
+
+    def get_product_id(self) -> str:
         return self.__product_id
- 
-    def get_name(self):
+
+    def get_name(self) -> str:
         return self.__name
- 
-    def get_price(self):
+
+    def get_price(self) -> float:
         return self.__price
- 
-    def get_stock(self):
+
+    def get_stock(self) -> int:
         return self.__stock
 
     def get_supplier(self) -> Supplier:
         return self.__supplier
-    
-    def update_stock(self, quantity):
+
+    def update_stock(self, quantity: int) -> None:
         self.__stock = quantity
- 
-    def display_information(self):
+
+    def display_information(self) -> None:
         print("-----------------------------------------")
         print(f"ID: {self.__product_id}")
         print(f"Name: {self.__name}")
@@ -60,13 +60,13 @@ class Product(ABC):
         print(f"Stock: {self.__stock}")
 
     @abstractmethod
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self) -> str:
         pass
 
 class CanBeShipped(ABC):
 
     @abstractmethod
-    def calculate_shipping_cost(self):
+    def calculate_shipping_cost(self) -> float:
         pass
 
 #create PhysicalProduct that inherits from Product
@@ -77,18 +77,18 @@ class PhysicalProduct(Product, CanBeShipped):
         super().__init__(product_id, name, price, stock, supplier)
         self.__weight: float = weight
 
-    def display_information(self):
+    def display_information(self) -> None:
         super().display_information()
         print(f"Weight: {self.__weight} kg")
         print("-----------------------------------------")
 
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self) -> str:
         return "This product requires physical shipping."
 
-    def calculate_shipping_cost(self):
+    def calculate_shipping_cost(self) -> float:
         return 5.00 * self.__weight
 
-    def get_weight(self):
+    def get_weight(self) -> float:
         return self.__weight
             
 #create Digitalproduct that inherits from Product
@@ -99,15 +99,15 @@ class DigitalProduct(Product):
         super().__init__(product_id, name, price, stock, supplier)
         self.__download_size: float = download_size
 
-    def display_information(self):
+    def display_information(self) -> None:
         super().display_information()
         print(f"Download size: {self.__download_size} MB")
         print("-----------------------------------------")
 
-    def get_fulfilment_info(self):
+    def get_fulfilment_info(self) -> str:
         return "This product is delivered digitally."
 
-    def get_download_size(self):
+    def get_download_size(self) -> float:
         return self.__download_size
         
 ## inventory class 
@@ -187,7 +187,7 @@ class Order:
         return total
     
 ##file handling by loading and saving
-def load_inventory_data():
+def load_inventory_data() -> list | None:
     try:
         with open("inventory.json", "r") as file:
             data = json.load(file)
@@ -201,8 +201,7 @@ def load_inventory_data():
         print(f"\nError reading file: {e}. Using default inventory.")
         return None
  
- 
-def save_inventory(inventory):
+def save_inventory(inventory: Inventory) -> None:
     print("\nSaving inventory...")
     try:
         data = []
@@ -231,7 +230,7 @@ def save_inventory(inventory):
         print(f"Error saving inventory: {e}")
 
 ## functions to add, update, and search
-def add_product_menu(inventory):
+def add_product_menu(inventory: Inventory) -> None:
     print("\nAdd New Product")
     print("1. Physical product")
     print("2. Digital product")
@@ -263,7 +262,7 @@ def add_product_menu(inventory):
     inventory.add_product(product)
     print("Product added successfully!")
  
-def update_stock_menu(inventory):
+def update_stock_menu(inventory: Inventory) -> None:
     print("\nUpdate Stock")
     p_id = input("Enter Product ID: ")
     product = inventory.find_product(p_id)
@@ -282,7 +281,7 @@ def update_stock_menu(inventory):
         print("Invalid stock number.")
  
  
-def search_product_menu(inventory):
+def search_product_menu(inventory: Inventory) -> None:
     print("\nSearch Product")
     p_id = input("Enter Product ID: ")
     product = inventory.find_product(p_id)

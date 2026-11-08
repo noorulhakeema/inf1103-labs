@@ -373,7 +373,9 @@ poly_inventory.add_product(ebook)
 
 for product in poly_inventory.get_products():
     product.display_information()
-    print(product.get_fulfilment_info())    
+    print(product.get_fulfilment_info()) 
+
+print()
 print("=========================================")
 print("INVENTORY MANAGEMENT SYSTEM")
 print("=========================================")

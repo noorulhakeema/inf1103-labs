@@ -3,83 +3,11 @@ from models.Supplier import Supplier
 from models.Product import Product
 from models.PhysicalProduct import PhysicalProduct
 from models.DigitalProduct import DigitalProduct
-        
-## inventory class 
-# Inventory groups Product objects, but the products can exist independently of the inventory
-class Inventory:
+from models.Inventory import Inventory
+from models.Order import Order        
 
-    def __init__(self):
-        self.__products: list[Product] = []
 
-    def add_product(self, product: Product) -> None:
-        self.__products.append(product)
 
-    def remove_product(self, product_id: str) -> None:
-        product = self.find_product(product_id)
-        if product is not None:
-            self.__products.remove(product)
-
-    def find_product(self, product_id: str) -> Product | None:
-        for product in self.__products:
-            if product.get_product_id() == product_id:
-                return product
-        return None
-
-    def display_all(self) -> None:
-        print("\nCurrent Inventory")
-        print("-----------------------------------------")
-        if not self.__products:
-            print("No products in inventory.")
-        for product in self.__products:
-            print(f"ID: {product.get_product_id()} | Name: {product.get_name()} | "
-                  f"Price: ${product.get_price():.2f} | Stock: {product.get_stock()}")
-        print("-----------------------------------------")
-
-    def get_products(self) -> list[Product]:
-        return self.__products
-
-## OrderLine represents one product and the quantity of that product requested in an order
-class OrderLine:
-
-    def __init__(self, product: Product, quantity: int):
-        self.__product: Product = product
-        self.__quantity: int = quantity
-
-    def get_product(self) -> Product:
-        return self.__product
-
-    def calculate_subtotal(self) -> float:
-        return self.__product.get_price() * self.__quantity
-
-    def display_information(self) -> None:
-        print(f"{self.__product.get_name()} x {self.__quantity} = ${self.calculate_subtotal():.2f}")
-
-## Order creates and manages its own OrderLine objects
-class Order:
-
-    def __init__(self, order_id: str):
-        self.__order_id: str = order_id
-        self.__order_lines: list[OrderLine] = []
-
-    def add_order_line(self, product: Product, quantity: int) -> None:
-        order_line = OrderLine(product, quantity)
-        self.__order_lines.append(order_line)
-
-    def remove_order_line(self, product_id: str) -> None:
-        for line in self.__order_lines:
-            if line.get_product().get_product_id() == product_id:
-                self.__order_lines.remove(line)
-                return
-
-    def get_order_lines(self) -> list[OrderLine]:
-        return self.__order_lines
-
-    def calculate_total(self) -> float:
-        total: float = 0.0
-        for line in self.__order_lines:
-            total += line.calculate_subtotal()
-        return total
-    
 ##file handling by loading and saving
 def load_inventory_data() -> list | None:
     try:

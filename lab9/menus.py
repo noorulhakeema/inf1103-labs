@@ -1,8 +1,7 @@
 from models.Inventory import Inventory
 from models.Product import Product
 from models.Supplier import Supplier
-from models.PhysicalProduct import PhysicalProduct
-from models.DigitalProduct import DigitalProduct
+from models.ProductFactory import ProductFactory
 
 ## functions to add, update, and search
 def add_product_menu(inventory: Inventory) -> None:
@@ -26,12 +25,12 @@ def add_product_menu(inventory: Inventory) -> None:
         stock = int(input("Stock Quantity: "))
         if choice == "1":
             weight = float(input("Weight (kg): "))
-            product = PhysicalProduct(p_id, name, price, stock, supplier, weight)
+            product = ProductFactory.create("physical", p_id, name, price, stock, supplier, weight)
         else:
             size = float(input("Download size (MB): "))
-            product = DigitalProduct(p_id, name, price, stock, supplier, size)
-    except ValueError:
-        print("Invalid number entered.")
+            product = ProductFactory.create("digital", p_id, name, price, stock, supplier, size)
+    except ValueError as e:
+        print(f"Invalid input: {e}")
         return
 
     inventory.add_product(product)

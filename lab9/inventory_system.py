@@ -1,6 +1,6 @@
 from models.Supplier import Supplier
 from models.Inventory import Inventory
-from storage import load_inventory_data, save_inventory
+from storage import load_inventory_data, save_inventory, load_products
 from menus import add_product_menu, update_stock_menu, search_product_menu
 from models.ProductFactory import ProductFactory
 
@@ -35,7 +35,8 @@ def main() ->None:
         print("3. Update Stock")
         print("4. Search Product")
         print("5. Save Inventory")
-        print("6. Exit")
+        print("6. Load Products from CSV")
+        print("7. Exit")
         print("------------------------")
     
         option = input("\nEnter option: ")
@@ -51,11 +52,13 @@ def main() ->None:
         elif option == "5":
             save_inventory(inventory)
         elif option == "6":
+            load_products("products.csv", inventory, default_supplier)
+        elif option == "7":
             save_inventory(inventory)
             print("Exiting program.")
             break
         else:
-            print("Invalid option. Please choose between 1 and 6.")
-
+            print("Invalid option. Please choose between 1 and 7.")
+            
 if __name__ == "__main__":
     main()
